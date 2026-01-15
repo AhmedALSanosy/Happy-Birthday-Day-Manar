@@ -1,0 +1,535 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Especially For Manar 🎂</title>
+    <style>
+        :root {
+            --primary-color: #e91e63;
+            --secondary-color: #ff80ab;
+            --bg-color: #fce4ec;
+            --text-color: #880e4f;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        /* --- Basic & Animation --- */
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
+            text-align: center; color: var(--text-color);
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeInUp 0.8s ease-out forwards; }
+
+        /* Floating Hearts Background */
+        .heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+        .heart {
+            position: absolute; bottom: -50px; background-color: rgba(255, 64, 129, 0.4);
+            width: 25px; height: 25px; transform: rotate(45deg); animation: floatUp 12s linear infinite;
+        }
+        .heart::before, .heart::after { content: ""; position: absolute; width: 25px; height: 25px; background-color: inherit; border-radius: 50%; }
+        .heart::before { top: -12.5px; left: 0; }
+        .heart::after { left: -12.5px; top: 0; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(45deg) scale(0.5); opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(45deg) scale(1.5); opacity: 0; }
+        }
+
+        /* --- Login Screen --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 20px; box-sizing: border-box;
+        }
+        .login-box {
+            background: white; padding: 40px 30px; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 100%; max-width: 400px;
+        }
+        .pass-input {
+            padding: 15px; border-radius: 50px; border: 2px solid var(--secondary-color);
+            width: 80%; text-align: center; font-size: 1.3rem; outline: none;
+            margin-bottom: 20px; transition: 0.3s;
+        }
+        .pass-input:focus { border-color: var(--primary-color); box-shadow: 0 0 10px rgba(233, 30, 99, 0.2); }
+        .enter-btn {
+            padding: 12px 50px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white; border: none; border-radius: 50px; font-size: 1.2rem; cursor: pointer;
+            font-weight: bold; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); transition: 0.3s;
+        }
+        .enter-btn:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(233, 30, 99, 0.5); }
+        
+        .error-msg {
+            color: #d32f2f; margin-top: 20px; font-weight: bold; font-size: 1.1rem;
+            min-height: 1.5em; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl; unicode-bidi: plaintext;
+        }
+
+        /* --- Main Content --- */
+        #main-content { display: none; }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), #c2185b);
+            color: white; padding: 80px 20px 120px 20px;
+            border-bottom-left-radius: 50% 40px; border-bottom-right-radius: 50% 40px;
+            margin-bottom: -80px; position: relative; z-index: 1;
+        }
+        .hero h1 { margin: 0; font-size: 3.5rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+        .hero-name { font-size: 5rem; display: block; margin: 10px 0; font-weight: 900; letter-spacing: 2px; }
+
+        .container { max-width: 700px; margin: 0 auto; padding: 0 20px 50px 20px; position: relative; z-index: 2; }
+
+        /* Countdown */
+        .countdown-box {
+            background: white; width: 90%; max-width: 550px; margin: 0 auto 40px auto; padding: 25px;
+            border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.8);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .timer-display { display: flex; justify-content: center; gap: 10px; direction: ltr; width: 100%; flex-wrap: wrap; }
+        .time-unit { background-color: #ffebee; padding: 12px 8px; border-radius: 12px; min-width: 60px; color: var(--primary-color); box-shadow: 0 5px 10px rgba(0,0,0,0.05); flex: 0 1 calc(25% - 8px); }
+        .time-unit span { display: block; font-size: 1.6rem; font-weight: 900; line-height: 1; }
+        .time-unit small { font-size: 0.75rem; font-weight: bold; margin-top: 4px; display: block; }
+
+        /* Mobile Responsive for Countdown */
+        @media (max-width: 768px) {
+            .countdown-box { padding: 20px; }
+            .timer-display { gap: 8px; }
+            .time-unit { padding: 10px 6px; min-width: 55px; flex: 0 1 calc(25% - 6px); }
+            .time-unit span { font-size: 1.4rem; }
+            .time-unit small { font-size: 0.7rem; margin-top: 3px; }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-box { padding: 15px; margin: 0 auto 30px auto; }
+            .timer-display { gap: 6px; }
+            .time-unit { padding: 8px 5px; min-width: 50px; flex: 0 1 calc(25% - 5px); }
+            .time-unit span { font-size: 1.2rem; }
+            .time-unit small { font-size: 0.65rem; margin-top: 2px; }
+        }
+
+        /* Navigation */
+        nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 40px; }
+        .nav-item {
+            background-color: var(--card-bg); color: var(--primary-color); padding: 12px 25px;
+            border-radius: 50px; text-decoration: none; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.4s; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-item:hover { transform: translateY(-5px) scale(1.05); background-color: var(--primary-color); color: white; }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg); border-radius: 25px; padding: 30px; margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center;
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h2 { color: var(--primary-color); border-bottom: 3px dashed var(--secondary-color); display: inline-block; padding-bottom: 10px; margin-top: 0; font-size: 1.8rem; width: auto; }
+        
+        /* Gallery Slider */
+        .gallery-slider-container {
+            position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 3px solid white;
+        }
+        .gallery-slider {
+            display: flex; transition: transform 0.5s ease-in-out;
+        }
+        .gallery-item {
+            flex: 0 0 100%; width: 100%;
+        }
+        .gallery-item img { width: 100%; height: 350px; object-fit: cover; display: block; pointer-events: none; }
+
+        /* Video */
+        .video-container video {
+            width: 100%; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 3px solid white; outline: none;
+        }
+
+        .message-text { font-size: 1.2rem; line-height: 1.8; color: #5c0034; white-space: pre-line; text-align: right; direction: rtl; unicode-bidi: plaintext; }
+
+        /* Music Button */
+        .music-control {
+            position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+            background: var(--primary-color); color: white; border: none;
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; transition: 0.3s;
+        }
+        .music-control:hover { transform: scale(1.1); }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background-color: white; padding: 40px; border-radius: 30px; text-align: center;
+            max-width: 80%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-size: 1.3rem; color: var(--text-color); font-weight: bold; unicode-bidi: plaintext;
+        }
+        .close-modal { margin-top: 20px; cursor: pointer; color: var(--primary-color); font-weight: bold; }
+
+        /* Signature */
+        .signature {
+            font-size: 0.8rem; color: var(--text-color); opacity: 0.6; margin: 30px 0; text-align: center;
+        }
+        .signature a {
+            color: inherit; text-decoration: none; border-bottom: 2px solid rgba(136, 14, 79, 0.4); font-weight: bold;
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 10000;
+        }
+
+        /* RTL Text Fix */
+        .rtl-text { direction: rtl; unicode-bidi: plaintext; text-align: right; }
+        
+        img, video {
+            -webkit-touch-callout: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body oncontextmenu="return false;">
+
+    <canvas id="confetti-canvas"></canvas>
+    <div class="heart-bg" id="heart-bg"></div>
+
+    <div id="login-screen">
+        <div class="login-box animate-in">
+            <h2 style="font-size: 2.2rem; color: var(--primary-color); margin-bottom: 10px;">Welcome Manar ❤️</h2>
+            <p style="margin-bottom: 25px; font-size: 1.2rem; opacity: 0.8;">To enter, type your special date 📅💕</p>
+            
+            <input type="text" id="passwordInput" class="pass-input" placeholder="e.g. 15/5">
+            <button class="enter-btn" onclick="checkPassword()">Unlock ❤️</button>
+            
+            <div id="errorContainer" style="min-height: 30px;"></div>
+        </div>
+        <div class="signature">
+            صُنع بكل حب ❤️<br>
+            <a href="https://www.instagram.com/ahmed_al_sanosy?igsh=cTh3djc2dWk2OXV2" target="_blank">Ahmed AL Sanosy</a>
+        </div>
+    </div>
+
+    <div id="main-content">
+        
+        <div class="hero animate-in">
+            <h1>Especially For</h1>
+            <span class="hero-name">Manar ❤️</span>
+            <p class="rtl-text" style="font-size: 1.3rem; opacity: 0.9; text-align: center;">كل سنة وانتي أجمل حاجة في حياتي ❤️</p>
+        </div>
+
+        <div class="container">
+            <div class="countdown-box animate-in" style="animation-delay: 0.2s;">
+                <h2 class="rtl-text" style="color: var(--primary-color); margin-bottom: 15px; font-weight: bold; text-align: center;">النهارده يومك يا أجمل منار ❤️🎂</h2>
+                <h3 id="countdown-title" style="margin-top: 0; color: var(--primary-color); text-align: center;">Birthday Countdown 🎉</h3>
+                <div class="timer-display" id="timer">
+                    <div class="time-unit"><span id="days">00</span><small>Days</small></div>
+                    <div class="time-unit"><span id="hours">00</span><small>Hours</small></div>
+                    <div class="time-unit"><span id="minutes">00</span><small>Mins</small></div>
+                    <div class="time-unit"><span id="seconds">00</span><small>Secs</small></div>
+                </div>
+                <p id="timer-msg" class="rtl-text" style="margin-bottom: 0; color: var(--text-color); margin-top: 15px; text-align: center; font-weight: bold;">❤️الوقت المتبقي لعيد ميلادك ال24 ❤️</p>
+            </div>
+
+            <nav class="animate-in" style="animation-delay: 0.4s;">
+                <a href="#message" class="nav-item">💌 Message</a>
+                <a href="#gallery" class="nav-item">📸 Gallery</a>
+                <a href="#video" class="nav-item">🎥 Video</a>
+                <a href="#music" class="nav-item">🎵 Music</a>
+            </nav>
+
+            <section id="message" class="card animate-in" style="animation-delay: 0.6s;">
+                <h2>My Message 💌</h2>
+                <div class="message-text">                   
+يا منار ❤️  
+يمكن الكلام مش دايمًا بيعرف يطلع اللي في القلب،
+بس النهارده حابب أقولك إن وجودك في حياتي فرق،
+وفرَق بطريقة هادية كده من غير ما تحسي.
+
+مش لازم يوم عيد ميلادك أقول كلام كبير،
+بس يكفيني أقولك إنك شخص غالي،
+والدنيا بوجودك أخف وأحن.
+
+بتمنى السنة الجديدة تكون أريح ليكي،
+وأقرب لحاجات بتفرحك،
+وأبعد عن أي حاجة تضايقك،
+وتفضلي دايمًا بخير… زي ما انتي.
+
+كل سنة وانتي طيبة يا روحي ❤️🎂
+                </div>
+            </section>
+
+            <section id="gallery" class="card animate-in" style="animation-delay: 0.8s;">
+                <h2>Your Memories 📸</h2>
+                <div class="gallery-slider-container" id="slider-container">
+                    <div class="gallery-slider" id="slider">
+                        <div class="gallery-item"><img src="images/img1.jpg" alt="Photo 1"></div>
+                        <div class="gallery-item"><img src="images/img2.jpg" alt="Photo 2"></div>
+                        <div class="gallery-item"><img src="images/img3.jpg" alt="Photo 3"></div>
+                        <div class="gallery-item"><img src="images/img4.jpg" alt="Photo 4"></div>
+                    </div>
+                </div>
+            </section>
+
+             <section id="video" class="card animate-in" style="animation-delay: 1s;">
+                <h2>Special Video 🎥</h2>
+                <div class="video-container" style="margin-top: 20px;">
+                    <video controls="" playsinline="" id="main-video" preload="auto" controlsList="nodownload">
+                        <source src="media/video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </section>
+
+            <section id="music" class="card animate-in" style="animation-delay: 1.2s;">
+                <h2>Your Special Song 🎵</h2>
+                <div style="margin-top: 15px;">
+                    <div style="margin-bottom: 8px; font-weight: bold; font-size: 1.1rem;">🎵 Play this while watching</div>
+                    <audio id="bg-music" style="width: 100%; border-radius: 50px;" preload="auto">
+                        <source src="media/love.mp3" type="audio/mpeg">
+                    </audio>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button onclick="toggleMusic()" class="enter-btn" style="padding: 10px 30px; font-size: 1rem;">Play/Pause Music 🎵</button>
+                    </div>
+                </div>
+            </section>
+
+            <div style="margin-bottom: 40px;">
+                <button class="enter-btn" onclick="showSurprise()">🎁 مفاجأة</button>
+            </div>
+
+            <div class="signature">
+                صُنع بكل حب ❤️<br>
+                <a href="https://www.instagram.com/ahmed_al_sanosy?igsh=cTh3djc2dWk2OXV2" target="_blank">Ahmed AL Sanosy</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="surpriseModal" class="modal">
+        <div class="modal-content">
+            <p class="rtl-text" style="text-align: center;">المفاجأة الحقيقية إن وجودك في حياتي هو أحلى هدية ❤️</p>
+            <div class="close-modal" onclick="closeSurprise()">إغلاق</div>
+        </div>
+    </div>
+
+    <button class="music-control" id="music-btn" onclick="toggleMusic()" style="display:none;">🎵</button>
+
+    <script>
+        const bgMusic = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+        let fadeInterval;
+        
+        const funnyMessages = [
+            "مش أي تاريخ… جربي تاني يا منار 💕",
+            "لأ مش ده، حاولي تاني يا منار 😂",
+            "إيه ده؟ نسيتي التاريخ يا منار ولا إيه؟ 😉",
+            "غلط! ركزي شوية يا فنانة 🎨",
+            "لا لا، مش هو ده.. فكري تاني 🤔",
+            "مش هفتحلك غير لما تكتبي الصح 😌"
+        ];
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        function fadeAudio(targetVolume, duration, callback) {
+            clearInterval(fadeInterval);
+            const startVolume = bgMusic.volume;
+            const steps = 20;
+            const stepTime = duration / steps;
+            const volumeStep = (targetVolume - startVolume) / steps;
+            let currentStep = 0;
+
+            fadeInterval = setInterval(() => {
+                currentStep++;
+                bgMusic.volume = Math.max(0, Math.min(1, startVolume + (volumeStep * currentStep)));
+                if (currentStep >= steps) {
+                    bgMusic.volume = targetVolume;
+                    clearInterval(fadeInterval);
+                    if (callback) callback();
+                }
+            }, stepTime);
+        }
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.volume = 0;
+                bgMusic.play();
+                fadeAudio(1, 2000);
+                musicBtn.innerText = '⏸️';
+            } else {
+                fadeAudio(0, 2000, () => {
+                    bgMusic.pause();
+                    musicBtn.innerText = '🎵';
+                });
+            }
+        }
+
+        bgMusic.addEventListener('timeupdate', function() {
+            const fadeTime = 3; 
+            if (bgMusic.duration && bgMusic.currentTime > bgMusic.duration - fadeTime && !bgMusic.isFadingOut) {
+                bgMusic.isFadingOut = true;
+                fadeAudio(0, fadeTime * 1000, () => {
+                    bgMusic.currentTime = 0;
+                    bgMusic.play();
+                    bgMusic.isFadingOut = false;
+                    fadeAudio(1, 2000); 
+                });
+            }
+        });
+
+        function showSurprise() {
+            document.getElementById('surpriseModal').style.display = 'flex';
+        }
+
+        function closeSurprise() {
+            document.getElementById('surpriseModal').style.display = 'none';
+        }
+
+        function checkPassword() {
+            var input = document.getElementById('passwordInput').value;
+            var correctPassword = "16/1"; 
+            var errorContainer = document.getElementById('errorContainer');
+
+            if (input === correctPassword) {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#e91e63', '#ff80ab', '#ffffff']
+                });
+
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    document.getElementById('music-btn').style.display = 'flex';
+                    
+                    bgMusic.volume = 0;
+                    bgMusic.play();
+                    fadeAudio(1, 3000); 
+
+                    startCountdown();
+                    createHearts();
+                    startSlider();
+                }, 500);
+            } else {
+                var randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+                errorContainer.innerHTML = '<p class="error-msg animate-in">' + randomMessage + '</p>';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function startCountdown() {
+            function updateTargetDate() {
+                var now = new Date();
+                var currentYear = now.getFullYear();
+                var target = new Date("Jan 16, " + currentYear + " 00:00:00");
+                
+                // إذا مر تاريخ اليوم (16 يناير) لهذا العام، نعد للعام القادم
+                if (now.getTime() >= target.getTime()) {
+                    target = new Date("Jan 16, " + (currentYear + 1) + " 00:00:00");
+                    document.getElementById("countdown-title").innerText = "Countdown to Next Birthday 🎉";
+                    document.getElementById("timer-msg").innerText = "❤️ الوقت المتبقي لعيد ميلادك القادم ❤️";
+                } else {
+                    document.getElementById("countdown-title").innerText = "Birthday Countdown 🎉";
+                    document.getElementById("timer-msg").innerText = "❤️ الوقت المتبقي لعيد ميلادك الـ 24 ❤️";
+                }
+                return target;
+            }
+
+            var birthday = updateTargetDate();
+
+            var x = setInterval(function() {
+                var nowTime = new Date().getTime();
+                var distance = birthday.getTime() - nowTime;
+                
+                // إذا وصل العداد للصفر، نقوم بتحديث التاريخ المستهدف للسنة القادمة فوراً
+                if (distance < 0) {
+                    birthday = updateTargetDate();
+                    distance = birthday.getTime() - nowTime;
+                }
+
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+                document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+                document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+                document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+            }, 1000);
+        }
+
+        function createHearts() {
+            const container = document.getElementById('heart-bg');
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = Math.random() * 5 + 5 + "s";
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                const size = Math.random() * 15 + 15 + "px";
+                heart.style.width = size;
+                heart.style.height = size;
+                
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 10000);
+            }, 500);
+        }
+
+        let currentSlide = 0;
+        function startSlider() {
+            const slider = document.getElementById('slider');
+            const slides = document.querySelectorAll('.gallery-item');
+            const totalSlides = slides.length;
+
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }, 3000);
+
+            let startX;
+            const container = document.getElementById('slider-container');
+            container.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            container.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].clientX;
+                if (startX - endX > 50) { 
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                } else if (endX - startX > 50) { 
+                    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                }
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            });
+        }
+    </script>
+
+</body></html>
